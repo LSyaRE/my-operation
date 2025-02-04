@@ -1,5 +1,5 @@
 import React from 'react';
-import RegisterDaily from './register-daily'; // Asegúrate de que la ruta sea correcta
+import RegisterDaily from './register'; // Asegúrate de que la ruta sea correcta
 import { Task } from '../../dto/Task';
 
 interface RegisterDailyScreenProps {

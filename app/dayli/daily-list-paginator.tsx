@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { View, Button, ActivityIndicator, Text, StyleSheet } from 'react-native';
-import DailyList from './daily-list'; // Asegúrate de que la ruta sea correcta
 import { Task } from '../../dto/Task'; // Asegúrate de que la ruta sea correcta
+import DailyList from './daily-list';
 
 // Definición de las propiedades que acepta el componente
 interface DailyListPaginatorProps {
@@ -47,7 +47,7 @@ const DailyListPaginator: React.FC<DailyListPaginatorProps> = ({
   return (
     <View style={styles.container}>
       <Text>Total de tareas: {tasks.length}</Text>
-      <DailyList tasks={currentTasks} />
+      {/* <DailyList tasks={currentTasks} /> */}
       {loading && <ActivityIndicator size="large" />}
       {hasMore && !loading && (
         <Button title="Cargar Más" onPress={loadMore} />

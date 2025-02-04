@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, FlatList, StyleSheet, Button } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { useRouter } from 'expo-router';
 
 // Definición de tipos
 type RootStackParamList = {
@@ -24,12 +25,12 @@ interface DailyListProps {
 type DailyListNavigationProp = StackNavigationProp<RootStackParamList, 'DailyList'>;
 
 const DailyList: React.FC<DailyListProps> = ({ tasks }) => {
-  const navigation = useNavigation<DailyListNavigationProp>();
+  const navigation =  useRouter();
 
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Lista de Tareas Diarias</Text>
-      <Button title="Registrar Daily" onPress={() => navigation.navigate('RegisterDaily')} />
+      <Button title="Registrar Daily" onPress={() => navigation.navigate('/dayli/register')} />
       <FlatList
         data={tasks}
         keyExtractor={(item) => item.id}

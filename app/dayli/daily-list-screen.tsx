@@ -1,8 +1,8 @@
 import React from 'react';
 import { SafeAreaView, View, Text, StyleSheet } from 'react-native';
-import DailyList from './daily-list'; // Asegúrate de que la ruta sea correcta
 import DailyListPaginator from './daily-list-paginator'; // Asegúrate de que la ruta sea correcta
 import { Task } from '../../dto/Task';
+import DailyList from '../(tabs)';
 
 interface DailyListScreenProps {
   tasks: Task[];
