@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { View, Button, ActivityIndicator, Text, StyleSheet } from 'react-native';
 import { Task } from '../../dto/Task'; // Asegúrate de que la ruta sea correcta
-import DailyList from './daily-list';
+import DailyList from './daily';
 
 // Definición de las propiedades que acepta el componente
 interface DailyListPaginatorProps {

@@ -2,7 +2,7 @@ import React from 'react';
 import { SafeAreaView, View, Text, StyleSheet } from 'react-native';
 import DailyListPaginator from './daily-list-paginator'; // Asegúrate de que la ruta sea correcta
 import { Task } from '../../dto/Task';
-import DailyList from '../(tabs)';
+import DailyList from './daily';
 
 interface DailyListScreenProps {
   tasks: Task[];
