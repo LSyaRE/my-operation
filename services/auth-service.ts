@@ -1,8 +1,6 @@
 import { API } from "@/constants/axios-client";
 import { AuthRequest } from "@/dto/auth-request";
-import { Trabajador } from "@/dto/trabajador";
-import { Usuario } from "@/dto/usuario";
-import { UsuarioPassword } from "@/dto/usuario-password";
+
 
 export class AuthService {
     constructor() {
@@ -16,7 +14,6 @@ export class AuthService {
             const userResponse        = await API.post('/operaciones/usuarios/guardar', authReq.user);
             authReq.userpass.usuario  = userResponse.data;
             const userPassResponse    = await API.post('/operaciones/usuarios/passwords/guardar',authReq.userpass);
-           
         } catch (error) {
             console.log(error);
         }
