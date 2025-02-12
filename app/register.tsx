@@ -1,14 +1,11 @@
 import { AuthRequest } from "@/dto/auth-request";
 import { AuthService } from "@/services/auth-service";
 import { useRouter } from "expo-router";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Controller, SubmitErrorHandler, useForm } from "react-hook-form";
 import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
-import * as Font from "expo-font";
-import Entypo from "@expo/vector-icons/build/Entypo";
-import { HEALTH_SERVICE } from "@/constants/instances";
-
+import { RegisterForm } from "@/dto/register-form";
 
 // Previene el auto ocultamiento del splash screen
 SplashScreen.preventAutoHideAsync();
@@ -29,12 +26,7 @@ SplashScreen.setOptions({
 const Register: React.FC<{
   onRegister: (username: string, password: string) => void;
 }> = ({ onRegister }) => {
-  // Formulario
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [nombre, setNombre] = useState("");
-  const [correo, setCorreo] = useState("");
-  const [redmine, setRedmine] = useState("");
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   // Comportamientos de la aplicación
   const [error, setError] = useState("");
@@ -48,95 +40,109 @@ const Register: React.FC<{
   } = useForm();
 
   const validateEmail = (text: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(text)) {
       setError("Correo electrónico no válido");
     } else {
       setError("");
     }
-    setCorreo(text);
   };
 
   // Routing
   const navigation = useRouter();
   const goToLogin = () => navigation.replace("/login");
 
-
-
-
-
-  const onSubmit = () => {
+  const onSubmit = (data: unknown) => {
     const authService = new AuthService();
+    const parseData = data as RegisterForm;
 
     authService.register({
       worker: {
-        nombre,
-        correo,
-        idRedmine: redmine,
+        nombre: parseData.nombre,
+        correo: parseData.correo,
+        idRedmine: parseData.redmine,
       },
       user: {
-        username,
+        username: parseData.username,
         estado: true,
       },
       userpass: {
-        password,
+        password: parseData.username,
       },
     });
 
-    setNombre("");
-    setCorreo("");
-    setRedmine("");
-    setUsername("");
-    setPassword("");
+    reset({
+      username: "",
+      password: "",
+      nombre: "",
+      correo: "",
+      redmine: "",
+    });
   };
 
-  const onError: SubmitErrorHandler<AuthRequest> = (errors, e) => {
+  const onError: SubmitErrorHandler<RegisterForm> = (errors, e) => {
     return console.log(errors);
   };
 
   return (
     <View style={styles.container}>
-      
       <Text style={styles.header}>Registro</Text>
 
       <Controller
         render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            style={styles.input}
-            placeholder="Nombres"
-            value={nombre}
-            onChangeText={setNombre}
-          />
+          <>
+            <View style={styles.input_container}>
+              <TextInput
+                style={styles.input}
+                placeholder="Nombres"
+                value={value}
+                onBlur={onBlur}
+                onChangeText={onChange}
+              />
+              {errors.nombre && <Text style={styles.error_message}>El nombre es requerido.</Text>}
+            </View>
+          </>
         )}
         control={control}
-        name={"nombres"}
+        name={"nombre"}
         rules={{ required: true }}
       />
 
       <Controller
         render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            style={styles.input}
-            placeholder="Correo"
-            value={correo}
-            onChangeText={validateEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-          />
+          <>
+            <View style={styles.input_container}>
+              <TextInput
+                style={styles.input}
+                placeholder="Correo"
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
+              {errors.correo && <Text style={styles.error_message}>El correo es invalido.</Text>}
+            </View>
+          </>
         )}
         control={control}
         name={"correo"}
-        rules={{ required: true }}
+        rules={{ required: true , pattern:/^[^\s@]+@[^\s@]+\.[^\s@]+$/}}
       />
 
       <Controller
         render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            style={styles.input}
-            placeholder="Identificador Redmine"
-            value={redmine}
-            onChangeText={setRedmine}
-          />
+          <>
+            <View style={styles.input_container}>
+              <TextInput
+                style={styles.input}
+                placeholder="Identificador Redmine"
+                value={value}
+                onBlur={onBlur}
+                onChangeText={onChange}
+              />
+              {errors.redmine && <Text style={styles.error_message}>El RedmineId es requerido.</Text>}
+            </View>
+          </>
         )}
         control={control}
         name={"redmine"}
@@ -145,12 +151,18 @@ const Register: React.FC<{
 
       <Controller
         render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            style={styles.input}
-            placeholder="Nombre de Usuario"
-            value={username}
-            onChangeText={setUsername}
-          />
+          <>
+            <View style={styles.input_container}>
+              <TextInput
+                style={styles.input}
+                placeholder="Nombre de Usuario"
+                value={value}
+                onBlur={onBlur}
+                onChangeText={onChange}
+              />
+              {errors.redmine && <Text style={styles.error_message}>El Usuario es requerido.</Text>}
+            </View>
+          </>
         )}
         control={control}
         name={"username"}
@@ -159,17 +171,23 @@ const Register: React.FC<{
 
       <Controller
         render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            style={styles.input}
-            placeholder="Contraseña"
-            secureTextEntry
-            value={password}
-            // passwordRules={} -- Se es que se necesita agregar unas reglas de validacion para la contraseña
-            onChangeText={setPassword}
-          />
+          <>
+            <View style={styles.input_container}>
+              <TextInput
+                style={styles.input}
+                placeholder="Contraseña"
+                secureTextEntry
+                value={value}
+                onBlur={onBlur}
+                // passwordRules={} -- Se es que se necesita agregar unas reglas de validacion para la contraseña
+                onChangeText={onChange}
+              />
+              {errors.password && <Text style={styles.error_message}>La contraseña es requerida.</Text>}
+            </View>
+          </>
         )}
         control={control}
-        name={"username"}
+        name={"password"}
         rules={{ required: true }}
       />
 
@@ -192,22 +210,28 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
-    alignSelf:"center"
+    alignSelf: "center",
   },
   input: {
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 5,
-    padding: 10,
     marginBottom: 15,
+    padding: 10,
+  },
+  input_container: {
+    padding: 10,
   },
   button_container: {
-    display: 'flex',
+    display: "flex",
     gap: 10,
-    flexDirection: 'column',
-    justifyContent:'space-between',
+    flexDirection: "column",
+    justifyContent: "space-between",
     marginBottom: 20,
-  }
+  },
+  error_message: {
+    color: "red",
+  },
 });
 
 export default Register;
