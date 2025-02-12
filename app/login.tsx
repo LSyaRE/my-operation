@@ -37,7 +37,7 @@ const Login =  () => {
       setPassword("");
 
       if (isAuth) {
-        navigation.replace("/(dayli)");
+        navigation.replace("/daily/dailist");
       }
     } else {
       Alert.alert("Error", "Por favor, completa todos los campos.");
