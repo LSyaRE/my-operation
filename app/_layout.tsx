@@ -81,7 +81,7 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <View style={container} onLayout={onLayoutRootView}>
+      <View className="h-full flex justify-center bg-slate-950 px-5 pt-10" onLayout={onLayoutRootView}>
         {!isHealthy ? (
           <Text>No existe conexion con el servidor</Text>
         ) : (
