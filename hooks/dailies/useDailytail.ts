@@ -15,6 +15,7 @@ export const useDailytail = (id: number) => {
       setLoading(true);
       const data = await DAILY_SERVICE.obtenerPorId(+id);
       setDailies(data);
+      setError(null);
     } catch (err) {
       setError(err as Error);
     } finally {

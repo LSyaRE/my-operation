@@ -25,7 +25,13 @@ const DaiList = () => {
           onPress={() => router.push(`/daily/create`)}
           className="bg-[#FFD5D5] max-w-32 mt-4 rounded-full px-4 py-2"
         >
-          <Text className="text-[#FFF1E9]">Agregar Dailies</Text>
+          <Text className="text-white">Agregar Dailies</Text>
+        </Pressable>
+        <Pressable
+          onPress={() => router.push("/trabajadores/")}
+          className="bg-[#FFD5D5] max-w-32 mt-4 rounded-full px-4 py-2"
+        >
+          <Text className="text-[#FFF1E9]">Trabajadores</Text>
         </Pressable>
 
         <FlatList
@@ -42,6 +48,15 @@ const DaiList = () => {
                 </Text>
 
                 <View className="flex-row justify-end space-x-2 mt-3">
+                  <Pressable
+                    className="bg-pink-400 px-3 py-2 text-center rounded-lg active:90"
+                    onPress={() => router.push(`/daily/update/${item.id!}}`)}
+                  >
+                    <Text className="text-white text-sm">
+                      Actualizar
+                      <Ionicons name="refresh" size={24} color="white" />
+                    </Text>
+                  </Pressable>
                   <Pressable
                     className="bg-pink-400 px-3 py-2 text-center rounded-lg active:90"
                     onPress={() => handleDelete(item.id!)}
