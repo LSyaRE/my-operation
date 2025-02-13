@@ -3,9 +3,18 @@ import { AuthService } from "@/services/auth-service";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Controller, SubmitErrorHandler, useForm } from "react-hook-form";
-import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  Alert,
+  Pressable,
+} from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import { RegisterForm } from "@/dto/register-form";
+import { AUTH_SERVICE } from "@/constants/instances";
 
 // Previene el auto ocultamiento del splash screen
 SplashScreen.preventAutoHideAsync();
@@ -29,7 +38,6 @@ const Register: React.FC<{
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   // Comportamientos de la aplicación
-  const [error, setError] = useState("");
   const {
     register,
     setValue,
@@ -39,30 +47,21 @@ const Register: React.FC<{
     formState: { errors },
   } = useForm();
 
-  const validateEmail = (text: string) => {
-    if (!emailRegex.test(text)) {
-      setError("Correo electrónico no válido");
-    } else {
-      setError("");
-    }
-  };
-
   // Routing
   const navigation = useRouter();
   const goToLogin = () => navigation.replace("/login");
 
   const onSubmit = (data: unknown) => {
-    const authService = new AuthService();
     const parseData = data as RegisterForm;
 
-    authService.register({
+    AUTH_SERVICE.register({
       worker: {
         nombre: parseData.nombre,
         correo: parseData.correo,
         idRedmine: parseData.redmine,
       },
       user: {
-        username: parseData.username,
+        username: parseData.username.trim().toLowerCase(),
         estado: true,
       },
       userpass: {
@@ -84,35 +83,50 @@ const Register: React.FC<{
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Registro</Text>
+    <View className="flex-1 bg-slate-950 px-5 pt-10">
+      <Text className="text-white text-3xl font-bold mb-6">Registro</Text>
 
       <Controller
         render={({ field: { onChange, onBlur, value } }) => (
           <>
-            <View style={styles.input_container}>
+            <View className="mb-4">
               <TextInput
-                style={styles.input}
+                className="bg-slate-800 text-white p-3 rounded-lg border border-slate-700"
+                placeholderTextColor="#94a3b8"
                 placeholder="Nombres"
                 value={value}
                 onBlur={onBlur}
                 onChangeText={onChange}
               />
-              {errors.nombre && <Text style={styles.error_message}>El nombre es requerido.</Text>}
+              {errors.nombre && (
+                <Text className="text-red-400 mt-1">
+                  {errors.nombre.message}
+                </Text>
+              )}
             </View>
           </>
         )}
         control={control}
         name={"nombre"}
-        rules={{ required: true }}
+        rules={{
+          required: "Este campo es obligatorio",
+        }}
       />
 
       <Controller
+        rules={{
+          required: "Este campo es obligatorio",
+          pattern: {
+            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+            message: "Correo invalido",
+          },
+        }}
         render={({ field: { onChange, onBlur, value } }) => (
           <>
-            <View style={styles.input_container}>
+            <View className="mb-4">
               <TextInput
-                style={styles.input}
+                className="bg-slate-800 text-white p-3 rounded-lg border border-slate-700"
+                placeholderTextColor="#94a3b8"
                 placeholder="Correo"
                 value={value}
                 onChangeText={onChange}
@@ -120,47 +134,62 @@ const Register: React.FC<{
                 keyboardType="email-address"
                 autoCapitalize="none"
               />
-              {errors.correo && <Text style={styles.error_message}>El correo es invalido.</Text>}
+              {errors.correo && (
+                <Text className="text-red-400 mt-1">
+                  {errors.correo.message}
+                </Text>
+              )}
             </View>
           </>
         )}
         control={control}
         name={"correo"}
-        rules={{ required: true , pattern:/^[^\s@]+@[^\s@]+\.[^\s@]+$/}}
       />
 
       <Controller
         render={({ field: { onChange, onBlur, value } }) => (
           <>
-            <View style={styles.input_container}>
+            <View className="mb-4">
               <TextInput
-                style={styles.input}
+                className="bg-slate-800 text-white p-3 rounded-lg border border-slate-700"
+                placeholderTextColor="#94a3b8"
                 placeholder="Identificador Redmine"
                 value={value}
                 onBlur={onBlur}
                 onChangeText={onChange}
               />
-              {errors.redmine && <Text style={styles.error_message}>El RedmineId es requerido.</Text>}
+              {errors.redmine && (
+                <Text className="text-red-400 mt-1">
+                  {errors.redmine.message}
+                </Text>
+              )}
             </View>
           </>
         )}
         control={control}
         name={"redmine"}
-        rules={{ required: true }}
+        rules={{
+          required: "Este campo es obligatorio",
+        }}
       />
 
       <Controller
         render={({ field: { onChange, onBlur, value } }) => (
           <>
-            <View style={styles.input_container}>
+            <View className="mb-4">
               <TextInput
-                style={styles.input}
+                className="bg-slate-800 text-white p-3 rounded-lg border border-slate-700"
+                placeholderTextColor="#94a3b8"
                 placeholder="Nombre de Usuario"
                 value={value}
                 onBlur={onBlur}
                 onChangeText={onChange}
               />
-              {errors.redmine && <Text style={styles.error_message}>El Usuario es requerido.</Text>}
+              {errors.username && (
+                <Text className="text-red-400 mt-1">
+                  {errors.username.message}
+                </Text>
+              )}
             </View>
           </>
         )}
@@ -172,9 +201,10 @@ const Register: React.FC<{
       <Controller
         render={({ field: { onChange, onBlur, value } }) => (
           <>
-            <View style={styles.input_container}>
+            <View className="mb-4">
               <TextInput
-                style={styles.input}
+                className="bg-slate-800 text-white p-3 rounded-lg border border-slate-700"
+                placeholderTextColor="#94a3b8"
                 placeholder="Contraseña"
                 secureTextEntry
                 value={value}
@@ -182,18 +212,35 @@ const Register: React.FC<{
                 // passwordRules={} -- Se es que se necesita agregar unas reglas de validacion para la contraseña
                 onChangeText={onChange}
               />
-              {errors.password && <Text style={styles.error_message}>La contraseña es requerida.</Text>}
+              {errors.password && (
+                <Text className="text-red-400 mt-1">
+                  {errors.password.message}
+                </Text>
+              )}
             </View>
           </>
         )}
         control={control}
         name={"password"}
-        rules={{ required: true }}
+        rules={{
+          required: "Este campo es obligatorio",
+        }}
       />
 
       <View style={styles.button_container}>
-        <Button title="Registrar" onPress={handleSubmit(onSubmit)} />
-        <Button title="Iniciar Sesión" onPress={goToLogin} />
+        <Pressable
+          onPress={handleSubmit(onSubmit)}
+          className="bg-sky-500 py-3 rounded-lg flex items-center justify-center active:bg-sky-700"
+        >
+          <Text className="text-white text-lg font-semibold">Registrarse</Text>
+        </Pressable>
+
+        <Pressable
+          onPress={goToLogin}
+          className="bg-sky-500 py-3 rounded-lg flex items-center justify-center active:bg-sky-700"
+        >
+          <Text className="text-white text-lg font-semibold">Iniciar Sesión</Text>
+        </Pressable>
       </View>
     </View>
   );
