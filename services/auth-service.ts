@@ -1,5 +1,6 @@
 import { API } from "@/constants/axios-client";
 import { AuthRequest } from "@/dto/auth-request";
+import { Usuario } from "@/dto/usuario";
 
 
 export class AuthService {
@@ -29,5 +30,10 @@ export class AuthService {
             return false;
         }   
     }
+
+      async  obtenerUsuario(id: number): Promise<Usuario> {
+        const dayli = await API.get(`/operaciones/usuarios/buscar-username-trabajador/${id}`);
+        return dayli.data;
+      }
 
 }
