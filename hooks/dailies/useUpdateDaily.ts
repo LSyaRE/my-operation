@@ -44,9 +44,8 @@ export const useUpdateDaily = (id: string) => {
   const onSubmit = async (data: Daily) => {
     setIsSubmitting(true);
 
-    console.log(dayliId);
     try {
-      await DAILY_SERVICE.actualizar(dayliId, data); // Guardar los datos utilizando tu servicio
+      await DAILY_SERVICE.actualizar(data?.id, data); // Guardar los datos utilizando tu servicio
       router.push("/daily/dailist"); // Redirigir a la lista de dailies
     } catch (error) {
       console.error("Error al actualizar", error);

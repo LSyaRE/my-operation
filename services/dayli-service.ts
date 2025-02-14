@@ -12,7 +12,7 @@ export class DailyService {
   }
 
 
-  async actualizar(id: string, dayliReq: Daily): Promise<Daily> {
+  async actualizar(id: number, dayliReq: Daily): Promise<Daily> {
     const updatedDayli = await API.put(`${path}/${id}`, dayliReq);
     return updatedDayli.data;
   }
