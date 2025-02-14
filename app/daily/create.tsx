@@ -12,7 +12,7 @@ import { useCreateDaily } from "@/hooks/dailies/useCreateDaily";
 const CreateDaily = () => {
   const { control, handleSubmit, errors, isSubmitting, onSubmit } =
     useCreateDaily();
-
+    const fechaRegex = /^\d{4}-\d{2}-\d{2}$/;
   return (
     <View className="flex-1 bg-slate-950 px-6 py-10">
       {/* Título */}
@@ -36,6 +36,37 @@ const CreateDaily = () => {
             {errors.observacion && (
               <Text className="text-red-400 mt-1">
                 {errors.observacion.message}
+              </Text>
+            )}
+          </View>
+        )}
+      />
+
+        {/* Fecha*/}
+      <Controller
+        name="fecha"
+        control={control}
+        rules={{
+          required: "Este campo es obligatorio",
+          pattern: { value: fechaRegex, message: "Debe ser una fecha valida" },
+          min: { value: 1, message: "Debe ser mayor a 0" },
+        }}
+        render={({ field: { onChange, value } }) => (
+          <View className="mb-4">
+            <Text className="text-green-400 text-lg mb-2">
+            📅 Fecha
+            </Text>
+            <TextInput
+              placeholder="2025-12-11"
+              placeholderTextColor="#94a3b8"
+              maxLength={10}
+              value={value?.toString()}
+              onChangeText={(text) => onChange(text.replace(/[^\d-]/g, ""))}
+              className="bg-slate-800 text-white p-3 rounded-lg border border-slate-700"
+            />
+            {errors.tiempoEnMinutos && (
+              <Text className="text-red-400 mt-1">
+                {errors.tiempoEnMinutos.message}
               </Text>
             )}
           </View>

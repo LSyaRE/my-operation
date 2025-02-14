@@ -11,7 +11,6 @@ import {
   Alert,
   Pressable,
 } from "react-native";
-import * as SplashScreen from "expo-splash-screen";
 
 import { AUTH_SERVICE, HEALTH_SERVICE } from "@/constants/instances";
 import { Controller, useForm } from "react-hook-form";
@@ -44,7 +43,7 @@ const Login = () => {
   const handleLogin = async (data: unknown) => {
     console.log(data);
     const isAuth: boolean = await AUTH_SERVICE.login(
-      data.nombre,
+      data.nombre.trim().toLowerCase(),
       data.password
     );
     setError(isAuth)

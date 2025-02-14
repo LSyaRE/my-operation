@@ -50,7 +50,7 @@ const DaiList = () => {
                 <View className="flex-row justify-end space-x-2 mt-3">
                   <Pressable
                     className="bg-pink-400 px-3 py-2 text-center rounded-lg active:90"
-                    onPress={() => router.push(`/daily/update/${item.id!}}`)}
+                    onPress={() => router.push(`/daily/update/${item.id}`)}
                   >
                     <Text className="text-white text-sm">
                       Actualizar
